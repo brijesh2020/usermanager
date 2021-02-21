@@ -53,7 +53,8 @@ public class UserService implements UserDetailsService{
 	@Autowired
 	private LoginAttemptService loginAttemptService;
 	
-	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	@Autowired
+	private BCryptPasswordEncoder encoder ;
 	
 	@Autowired
 	private EmailService emailService;
@@ -66,7 +67,7 @@ public class UserService implements UserDetailsService{
 		try {
 			validateLoginAttempt(user);
 		} catch (ExecutionException e) {
-			e.printStackTrace();
+			logger.error("Error in loadUserByUsername by name:"+e.getLocalizedMessage());
 		}
 		user.setLastLoginDateDisplay(user.getLastLoginDate());
 		user.setLastLoginDate(new Date());
@@ -84,7 +85,7 @@ public class UserService implements UserDetailsService{
 			}
 		}else {
 			loginAttemptService.evictUserFromLoginAttempt(user.getUserName());
-		}
+		}  
 		
 	}
 
@@ -107,7 +108,7 @@ public class UserService implements UserDetailsService{
 		u.setProfileImageUrl(getTemporaryImageUrl(username));
 		userRepository.save(u);
 		logger.info("pass:"+pass);
-		emailService.sendNewPasswordEmail(u.getFirstName(),u.getPassword(), u.getEmail());
+		//emailService.sendNewPasswordEmail(u.getFirstName(),u.getPassword(), u.getEmail());
 		return u;
 	}
 

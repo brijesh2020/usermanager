@@ -1,5 +1,7 @@
 package com.e4d4.usermanager.listener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -10,7 +12,7 @@ import com.e4d4.usermanager.service.LoginAttemptService;
 
 @Component
 public class AuthenticationSuccessListener {
-
+	private final Logger log = LoggerFactory.getLogger(getClass()); 
 	private LoginAttemptService loginAttempService;
 
 	@Autowired
@@ -21,12 +23,11 @@ public class AuthenticationSuccessListener {
 	
 	@EventListener
 	public void onAuthenticationSuccess(AuthenticationSuccessEvent event) {
+	 
 		Object principal = event.getAuthentication().getPrincipal();
 		if(principal instanceof UserPrincipal) {
-			String userName = (String) event.getAuthentication().getPrincipal();
-			loginAttempService.evictUserFromLoginAttempt(userName);
+			UserPrincipal p =   (UserPrincipal) event.getAuthentication().getPrincipal();
+			loginAttempService.evictUserFromLoginAttempt(p.getUsername());
 		}
 	}
-	
-	
 }

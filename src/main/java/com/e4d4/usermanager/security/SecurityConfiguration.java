@@ -51,9 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.authenticationEntryPoint(entryPoint)
 		.and().addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class) ;
 	}
- 
-
-	
+  
 	@Bean
 	@Override
 	protected AuthenticationManager authenticationManager() throws Exception {
@@ -63,5 +61,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Bean
 	public DefaultAuthenticationEventPublisher authenticationEventPublisher() {
 		return new DefaultAuthenticationEventPublisher();
+	}
+	
+	@Bean
+	public  BCryptPasswordEncoder getBCrypt() {
+		return  new BCryptPasswordEncoder();
 	}
 }
